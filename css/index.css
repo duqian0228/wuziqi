@@ -1,0 +1,339 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.container {
+  width: 100%;
+  background-image: url(../image/beijing.jpg);
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+
+.container .curtain {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  transition: background .8s ease;
+}
+
+.container .curtain.curtain-play {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.container .begin {
+  width: 400px;
+  height: 500px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  overflow: hidden;
+  transition: transform .4s ease;
+}
+
+.container .begin.begin-play {
+  transform: translate3d(0, -100%, 0) scale(0, 0);
+}
+
+.container .begin .logo {
+  width: 300px;
+  height: 300px;
+  background-image: url(../image/logo.png);
+  background-size: 100% 100%;
+  margin: 0 auto;
+}
+
+.container .begin .begin-btn {
+  width: 300px;
+  height: 150px;
+  background-image: url(../image/button.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center center;
+  margin: 40px auto;
+  font-size: 40px;
+  color: #ccc;
+  line-height: 130px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.container #chessboard {
+  border: 1px solid #000;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  transform: scale(0, 0);
+  transition: transform .8s ease .4s;
+}
+
+.container #chessboard.chessboard-show {
+  transform: scale(1, 1);
+  cursor: pointer;
+}
+
+.container .button {
+  width: 200px;
+  position: absolute;
+  top: 100px;
+}
+
+.container .button .button-list {
+  width: 100%;
+  height: 80px;
+  cursor: pointer;
+  background-image: url(../image/button.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  line-height: 60px;
+  text-align: center;
+  color: #fff;
+  font-size: 24px;
+  transform: scale(0, 0);
+  transition: transform .8s ease .4s,font-size .4s ease;
+}
+
+.container .button .button-list.button-show {
+  transform: scale(1, 1);
+}
+
+.container .button .button-list:hover {
+  font-size: 26px;
+}
+
+.container .button.button-left {
+  left: 150px;
+}
+
+.container .button.button-right {
+  min-height: 200px;
+  right: 150px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.container .button.button-right .play-type {
+  width: 100%;
+  padding: 0 30px;
+  box-sizing: border-box;
+  height: 200px;
+  opacity: 0;
+  z-index: 0;
+  transform: translate3d(100%, 0, 0);
+  transition: opacity .4s ease,transform .4s ease;
+}
+
+.container .button.button-right .play-type.play-type-show {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  z-index: 200;
+}
+
+.container .button.button-right .play-type p {
+  width: 100%;
+  height: 30px;
+  margin: 10px 0;
+  line-height: 30px;
+  font-size: 18px;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+  background-image: url(../image/button.png);
+  background-size: 100% 120%;
+}
+
+.container .button.button-right .play-dom {
+  z-index: 3;
+  position: absolute;
+  top: 80px;
+}
+
+.container .button.button-right .play-dom.dom {
+  display: none;
+  z-index: -1;
+}
+
+.container .cue-play, .container .cue-replay, .container .cue-people, .container .cue-ren-ji {
+  width: 300px;
+  height: 138px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transform: scale(0, 0);
+  transition: transform .4s ease;
+}
+
+.container .chess-box {
+  width: 300px;
+  height: 200px;
+  position: absolute;
+  right: 100px;
+  top: 300px;
+  background-image: url(../image/chess-box.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transform: scale(0, 0);
+  transition: transform .8s ease .4s;
+}
+
+.container .chess-box.chess-box-show {
+  transform: scale(1, 1);
+}
+
+.container .chess {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.container .chess .black-chess {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 250px;
+  right: -140px;
+  background-image: url(../image/black-chess.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transition: transform .4s ease;
+}
+
+.container .chess .black-chess.active {
+  transform: translate3d(0, -100px, 0);
+}
+
+.container .chess .white-chess {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 290px;
+  right: -260px;
+  background-image: url(../image/white-chess.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.cue-play {
+  background-image: url(../image/begin.png);
+}
+
+.cue-play.cue-show {
+  transform: scale(1, 1);
+}
+
+.cue-replay {
+  background-image: url(../image/replay.png);
+}
+
+.cue-replay.cue-show {
+  transform: scale(1, 1);
+}
+
+.cue-ren-ji {
+  background-image: url(../image/ren-ji.png);
+}
+
+.cue-ren-ji.cue-show {
+  transform: scale(1, 1);
+}
+
+.cue-people {
+  background-image: url(../image/people.png);
+}
+
+.cue-people.cue-show {
+  transform: scale(1, 1);
+}
+
+.win, .not-replay {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-image: url(../image/win.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: none;
+}
+
+.win p, .not-replay p {
+  font-size: 30px;
+  color: #ccc;
+  position: absolute;
+  bottom: 50px;
+  left: 80px;
+}
+
+.win.black-win, .not-replay.black-win {
+  display: block;
+}
+
+.win.white-win, .not-replay.white-win {
+  display: block;
+}
+
+.sure-btn {
+  width: 300px;
+  height: 138px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-image: url(../image/sure.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  display: none;
+}
+
+.sure-btn .sure, .sure-btn .not {
+  width: 40px;
+  height: 30px;
+  position: absolute;
+  bottom: 5px;
+  background-image: url(../image/button.png);
+  background-size: 100% 128%;
+  background-repeat: no-repeat;
+  color: #ccc;
+  text-align: center;
+  line-height: 30px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sure-btn .sure {
+  left: 105px;
+}
+
+.sure-btn .not {
+  right: 105px;
+}
+
+.not-replay {
+  cursor: pointer;
+}
