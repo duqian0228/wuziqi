@@ -98,7 +98,6 @@ $(function(){
   function review(position){
     var i=1;
     for(var pos in blocks){
-      // console.log()
       drawtext(p2o(pos),i,blocks[pos]);
       i++;
     }
@@ -199,7 +198,7 @@ $(function(){
       ty--;
     }
     var max=Math.max(num,num1,num2,num3);
-      console.log(max);
+    return max;
   }
   //落棋
   function handleClick(e){
@@ -208,6 +207,9 @@ $(function(){
       x:Math.round((e.offsetX-off/2)/off),
       y:Math.round((e.offsetY-off/2)/off)
     };
+      if(blocks[o2k(position)]){
+          return;
+      }
     if(ai){
         audio.play();
       drawChess(position,"black");
@@ -241,7 +243,6 @@ $(function(){
                 return;
               });
             });
-        $(this).off("click");
         return;
       }else{
         drawChess(p2o(AI()),"white");
@@ -281,9 +282,7 @@ $(function(){
       }
       return;
     }
-    if(blocks[o2k(position)]){
-      return;
-    }
+
     if(flag){
         audio.play();
         clearInterval(black_time);
