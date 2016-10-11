@@ -206,7 +206,23 @@
       background-repeat:no-repeat;
     }
   }
-
+  .clock{
+    opacity:0;
+    transition:opacity .4s ease .8s;
+    &.show{
+      opacity:1;
+    }
+  }
+  #clock-white{
+    position:absolute;
+    bottom:190px;
+    left:255px;
+  }
+  #clock-black{
+    position:absolute;
+    bottom:190px;
+    left:180px;
+  }
 }
 .cue-play{
   background-image:url(../image/begin.png);

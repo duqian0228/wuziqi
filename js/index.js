@@ -12,11 +12,13 @@ $(function(){
   var flag=true;
   var blocks={};
   var blank={};
+    var audio=$("audio").get(0);
   for(var i=0;i<15;i++){
     for(var j=0;j<15;j++){
       blank[p2k(i,j)]=true;
     }
   }
+
   // var chess=$(".chess");
   // chess.css({'width':+width,'height':+width});
   button_type.on("click",function(){
@@ -24,12 +26,14 @@ $(function(){
     $(".play-type").toggleClass("play-type-show");
   });
   container.css("height",height);
+    //进入游戏
   begin.on("click",function(){
     $(".curtain").addClass("curtain-play");
     $(".begin").addClass("begin-play");
     $(chessboard).addClass("chessboard-show");
     $(".button-list").addClass("button-show");
     $(".chess-box").addClass("chess-box-show");
+      $(".clock").addClass("show");
   });
 
   //传入x,y 坐标，转换成 "x_y"的形式
@@ -101,6 +105,7 @@ $(function(){
   }
   drawChessboard();
   //绘制每颗棋子
+    var white_time,black_time;
   function drawChess(position,color){
     ctx.save();
     ctx.beginPath();
@@ -109,7 +114,6 @@ $(function(){
       var radgrad = ctx.createRadialGradient(-3,-3,2,0,0,15);
       radgrad.addColorStop(0, '#fff');
       radgrad.addColorStop(0.5, '#000');
-      ctx.fillStyle=radgrad;
     }else{
       ctx.shadowOffsetX=3;
       ctx.shadowOffsetY=3;
@@ -123,7 +127,7 @@ $(function(){
     ctx.restore();
     blocks[position.x+"_"+position.y]=color;
     delete blank[position.x+"_"+position.y];
-  }   //{x,y}
+  }//{x,y}
   //检测相同棋子的个数
   function check(pos,color){
     var num=1;
@@ -195,8 +199,9 @@ $(function(){
       ty--;
     }
     var max=Math.max(num,num1,num2,num3);
-    return max;
+      console.log(max);
   }
+  //落棋
   function handleClick(e){
     var t=0;
     var position={
@@ -204,6 +209,7 @@ $(function(){
       y:Math.round((e.offsetY-off/2)/off)
     };
     if(ai){
+        audio.play();
       drawChess(position,"black");
       if(check(position,"black")>=5){
         $(".win-black").addClass("black-win")
@@ -279,10 +285,12 @@ $(function(){
       return;
     }
     if(flag){
+        audio.play();
+        clearInterval(black_time);
+        white_time=setInterval(whiteClock,1000);
+        n=0;
+        blackClock();
       drawChess(position,"black");
-      // $(".black-chess").addClass("active").css({'top':+(position.x+0.5)*off,'left':+(position.x+0.5)*off});
-      t=setInterval(function(){
-      },1000);
       if(check(position,"black")>=5){
         $(".win-black").addClass("black-win")
             .delay(1000)
@@ -313,11 +321,15 @@ $(function(){
                 return;
               });
             });
-
         $(this).off("click");
         return;
       }
     }else{
+        audio.play();
+        clearInterval(white_time);
+        black_time=setInterval(blackClock,1000);
+        m=0;
+        whiteClock();
       drawChess(position,"white");
       if(check(position,"white")>=5){
         $(".win-white").addClass("white-win")
@@ -361,6 +373,7 @@ $(function(){
     var black={};
     var grade2=-Infinity;
     var white={};
+
     for(var pos in blank){
       if(grade1<check(p2o(pos),"black")){
         grade1=check(p2o(pos),"black");
@@ -376,9 +389,16 @@ $(function(){
     }else{
       return white;
     }
+
   }
 
   $(".play").on("click",function(){
+      clearInterval(black_time);
+      n=0;
+      blackClock();
+      clearInterval(white_time);
+      m=0;
+      whiteClock();
     $(".win-white").removeClass("white-win");
     $(".win-black").removeClass("black-win");
     $(".cue-play").addClass("cue-show")
@@ -394,7 +414,12 @@ $(function(){
     flag=true;
   });
   $(".people").on("click",function(){
-
+      clearInterval(black_time);
+      n=0;
+      blackClock();
+      clearInterval(white_time);
+      m=0;
+      whiteClock();
     $(".cue-people").addClass("cue-show")
         .delay(1000)
         .queue(function(){
@@ -407,6 +432,12 @@ $(function(){
     $(chessboard).off('click').on("click",handleClick);
   });
   $(".replay").on("click",function(){
+      clearInterval(black_time);
+      n=0;
+      blackClock();
+      clearInterval(white_time);
+      m=0;
+      whiteClock();
     $(".cue-replay").addClass("cue-show")
         .delay(1000)
         .queue(function(){
@@ -420,6 +451,12 @@ $(function(){
     flag=true;
   });
   $(".ren-ji").on("click",function(){
+      clearInterval(black_time);
+      n=0;
+      blackClock();
+      clearInterval(white_time);
+      m=0;
+      whiteClock();
     $(".cue-ren-ji").addClass("cue-show")
         .delay(1000)
         .queue(function(){
@@ -432,4 +469,181 @@ $(function(){
     $(chessboard).off('click').on("click",handleClick);
     ai=true;
   });
+
+    //白棋的钟表
+    var canvas_white=$("#clock-white").get(0);
+    var clock_white=canvas_white.getContext("2d");
+    var m=0;
+    function whiteClock(){
+        //表盘
+        clock_white.clearRect(0,0,75,150);
+        clock_white.save();
+        clock_white.translate(0,75);
+        clock_white.arc(0,0,75,1.5*Math.PI,0.5*Math.PI);
+        clock_white.fillStyle="#fff";
+        clock_white.fill();
+        clock_white.restore();
+
+        //刻度
+        clock_white.save();
+        clock_white.translate(0,75);
+        for(var i=0;i<30;i++){
+            clock_white.beginPath();
+            clock_white.moveTo(0,-75);
+            if(i%5==0){
+                clock_white.lineTo(0,-65);
+            }else{
+                clock_white.lineTo(0,-70);
+            }
+            clock_white.stroke();
+            clock_white.closePath();
+            clock_white.rotate(Math.PI/30);
+        }
+        clock_white.restore();
+
+        //转轴
+        clock_white.save();
+        clock_white.translate(0,75);
+        clock_white.beginPath();
+        clock_white.arc(0,0,10,1.5*Math.PI,0.5*Math.PI);
+        clock_white.fill();
+        clock_white.closePath();
+        clock_white.restore();
+
+        //指针的绘制与转动
+        clock_white.save();
+        clock_white.translate(0,75);
+        clock_white.rotate(m*Math.PI/30);
+        clock_white.beginPath();
+        clock_white.moveTo(0,0);
+        clock_white.lineTo(0,-60);
+        clock_white.stroke();
+        clock_white.closePath();
+        clock_white.restore();
+        m++;
+        if( m>30){
+            clearInterval(white_time);
+            m=0;
+            $(".win-black").addClass("black-win")
+                .delay(1000)
+                .queue(function(){
+                    $(".sure-btn").css("display","block");
+                    $(this).removeClass("black-win").dequeue();
+                    $(".sure-btn .sure").on("click",function(){
+                        $(".sure-btn").css("display","none");
+                        review();
+                    });
+                    $(".sure-btn .not").on("click",function(){
+                        $(".sure-btn").css("display","none");
+                        $(".not-replay").css("display","block")
+                            .on("click",function(){
+                                $(".cue-replay").addClass("cue-show")
+                                    .delay(1000)
+                                    .queue(function(){
+                                        $(this).removeClass("cue-show").dequeue();
+                                    });
+                                $(".not-replay").css("display","none");
+                                ctx.clearRect(0,0,width,width);
+                                drawChessboard();
+                                blocks={};
+                                $(chessboard).off('click').on("click",handleClick);
+                                ai=false;
+                                flag=true;
+                            });
+                        return;
+                    });
+                });
+            $(chessboard).off("click");
+            return;
+        }
+    }
+    whiteClock();
+
+    //黑棋的钟表
+    var canvas_black=$("#clock-black").get(0);
+    var clock_black=canvas_black.getContext("2d");
+    var n=0;
+    function blackClock(){
+        clock_black.clearRect(0,0,75,150);
+        clock_black.save();
+        clock_black.translate(75,75);
+        clock_black.arc(0,0,75,0.5*Math.PI,1.5*Math.PI);
+        clock_black.fillStyle="#000";
+        clock_black.fill();
+        clock_black.restore();
+
+        clock_black.save();
+        clock_black.translate(75,75);
+        for(var i=0;i<30;i++){
+            clock_black.beginPath();
+            clock_black.moveTo(0,-75);
+            if(i%5==0){
+                clock_black.lineTo(0,-65);
+            }else{
+                clock_black.lineTo(0,-70);
+            }
+            clock_black.strokeStyle="#fff";
+            clock_black.stroke();
+            clock_black.closePath();
+            clock_black.rotate(-Math.PI/30);
+        }
+        clock_black.restore();
+
+        clock_black.save();
+        clock_black.translate(75,75);
+        clock_black.beginPath();
+        clock_black.arc(0,0,10,0.5*Math.PI,1.5*Math.PI);
+        clock_black.fillStyle="#fff";
+        clock_black.fill();
+        clock_black.closePath();
+        clock_black.restore();
+
+        clock_black.save();
+        clock_black.translate(75,75);
+        clock_black.rotate(-n*Math.PI/30);
+        clock_black.beginPath();
+        clock_black.moveTo(0,0);
+        clock_black.lineTo(0,-60);
+        clock_black.strokeStyle="#fff";
+        clock_black.stroke();
+        clock_black.closePath();
+        clock_black.restore();
+        n++;
+        if( n>30){
+            clearInterval(black_time);
+            n=0;
+            $(".win-white").addClass("white-win")
+                .delay(1000)
+                .queue(function(){
+                    $(this).removeClass("white-win").dequeue();
+                    $(".sure-btn").css("display","block");
+                    $(".sure-btn .sure").on("click",function(){
+                        $(".sure-btn").css("display","none");
+                        review();
+                    });
+                    $(".sure-btn .not").on("click",function(){
+                        $(".sure-btn").css("display","none");
+                        $(".not-replay").css("display","block")
+                            .on("click",function(){
+                                $(".cue-replay").addClass("cue-show")
+                                    .delay(1000)
+                                    .queue(function(){
+                                        $(this).removeClass("cue-show").dequeue();
+                                    });
+                                $(".not-replay").css("display","none");
+                                ctx.clearRect(0,0,width,width);
+                                drawChessboard();
+                                blocks={};
+                                $(chessboard).off('click').on("click",handleClick);
+                                ai=false;
+                                flag=true;
+                            });
+                        return;
+                    });
+                });
+            $(chessboard).off("click");
+            return;
+        }
+    }
+    blackClock();
 });
